@@ -1,0 +1,9 @@
+#sort-list{
+	margin:0;
+	list-style-type: none;
+}
+#sort-list li{
+	display: block;
+	padding:10px 0;
+	border-bottom: 1px solid #DADADA;
+}

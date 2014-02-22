@@ -1,5 +1,4 @@
 <?php 
-
 function somc_subpages_produktion9_shortcode($atts)
 {
 	global $post;
@@ -18,7 +17,7 @@ function somc_subpages_produktion9_shortcode($atts)
 	 
 	$p9_str = '';
 	$p9_str .= '<div class="container">';
-	$p9_str .= '<h3 class="widget_title">'.$title.'</h3>' ;
+	$p9_str .= '<h3 class="widget_title">'.$title.'</h3>';
 	 
 	$page_id= $post->ID;
 	
@@ -31,7 +30,7 @@ function somc_subpages_produktion9_shortcode($atts)
 	
 	$attachments = get_children( $args );
 	
-   	$p9_str .= '<ul class="page_list">';
+   	$p9_str .= '<ul id="sort-list">';
 	   	if($attachments)
 	   	{
 			foreach($attachments as $attachment)
@@ -68,5 +67,5 @@ function somc_subpages_produktion9_shortcode($atts)
 	$p9_str .= '</div>';
 	
 	return $p9_str;
-   }      
+}     
 ?>
