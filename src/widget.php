@@ -37,12 +37,12 @@ class somc_subpages_produktion9_widget extends WP_Widget {
     if (!empty($title))
       echo $before_title . $title . $after_title;
 	
-    $page_id= $post->ID;
+    $page_id = $post->ID;
     	$args = array(
     			'order' => $sort_order,
     			'post_parent' => $page_id,
     			'post_status' => 'publish',
-    			'post_type' => 'page',
+    			'post_type' => 'page'
     	);
     	
     	$attachments = get_children( $args ); ?>
@@ -52,8 +52,18 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		    	{
 		    		foreach($attachments as $attachment)
 		    	    {
+		    	    	$thetitle = $attachment->post_title;
+								$getlength = strlen($thetitle);
+								$thelength = 20;
+								if ($getlength > $thelength){
+										$thedots = "...";
+									}
+									else
+									{
+										$thedots = "";
+								}
 			    	    ?>
-			    	    	<li><a href="<?php echo $attachment->guid;?>"><?php echo $attachment->post_title;?></a></li>	
+			    	    	<li><?php echo get_the_post_thumbnail($attachment->ID);?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?></li>	
 			    	    <?php 	
 		    	    }
 		    	 }
@@ -62,6 +72,7 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		    	   $args = array(
 					   		'title_li' => '',
 		    			  'echo' => 1,
+		    			  'depth' => 0,
 		    			  'sort_order'=>$sort_order,
 		    			  'post_type'    => 'page',
 		    			  'post_status'  => 'publish',
@@ -158,5 +169,8 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 	}
 }// Class somc_subpages_produktion9_widget ends here
 
-
+// Register and load the widget
+function somc_subpages_produktion9_load_widget() {
+	register_widget( 'somc_subpages_produktion9_widget' );
+}
 

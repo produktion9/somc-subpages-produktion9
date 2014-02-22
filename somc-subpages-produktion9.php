@@ -10,11 +10,6 @@ License: GPL
 */
 
 include_once( 'src/widget.php' );
-
-// Register and load the widget
-function somc_subpages_produktion9_load_widget() {
-	register_widget( 'somc_subpages_produktion9_widget' );
-}
 add_action( 'widgets_init', 'somc_subpages_produktion9_load_widget' );
 
 include_once( 'src/create_shortcode.php' );

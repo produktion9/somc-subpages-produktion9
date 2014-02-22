@@ -14,7 +14,7 @@ function somc_subpages_produktion9_shortcode($atts)
 	 
 	$sort_order=empty($sort_order) ? 'ASC' : $sort_order;
 	 
-	$sort_by_values=empty($sort_by_values) ? 'page_title ' : $sort_by_values;	 
+	$sort_by_values=empty($sort_by_values) ? 'page_title ' : $sort_by_values;
 	 
 	$p9_str = '';
 	$p9_str .= '<div class="container">';
@@ -26,7 +26,7 @@ function somc_subpages_produktion9_shortcode($atts)
 				'order' => $sort_order,
 				'post_parent' => $page_id,
 				'post_status' => 'publish',
-				'post_type' => 'page',
+				'post_type' => 'page'
 	);
 	
 	$attachments = get_children( $args );
@@ -36,13 +36,25 @@ function somc_subpages_produktion9_shortcode($atts)
 	   	{
 			foreach($attachments as $attachment)
 	    	{
-	    		$p9_str .= '<li><a href="'.$attachment->guid.'">'.$attachment->post_title.'</a></li>';
+	    		$img = get_the_post_thumbnail($attachment->ID);
+	    		$thetitle = $attachment->post_title;
+					$getlength = strlen($thetitle);
+					$thelength = 20;
+					if ($getlength > $thelength){
+							$thedots = "...";
+						}
+						else
+						{
+							$thedots = "";
+					}
+	    		$p9_str .= '<li>'.$img.'<a href="'.$attachment->guid.'" title="'.$attachment->post_title.'">'.substr($thetitle, 0, $thelength).'</a>'. $thedots .'</li>';
 	    	}
 	   	}
 	   	else 
 	   	{	$args = array(
 	   	    	'title_li' => '',
-	   				'echo' => 0,
+	   				'echo' => 1,
+	   				'depth' => 0,
 	   				'sort_order'=>$sort_order,
 	   				'post_type'    => 'page',
 	   				'post_status'  => 'publish',
