@@ -4,12 +4,15 @@ function somc_subpages_produktion9_shortcode($atts)
 	global $post;
 	extract(shortcode_atts(array(
 				'title' => '',
+				'depth'=>'',
 				'sort_order'=>'',
 				'sort_by_values'=>''
 			), $atts));
 
 	
 	$title = empty($title) ? 'Sub Pages' : $title;
+
+	$depth=empty($depth) ? '1' : $depth;
 	 
 	$sort_order=empty($sort_order) ? 'ASC' : $sort_order;
 	 
@@ -36,24 +39,31 @@ function somc_subpages_produktion9_shortcode($atts)
 			foreach($attachments as $attachment)
 	    	{
 	    		$img = get_the_post_thumbnail($attachment->ID);
+					if ( ! empty( $img ) ){
+						$img = get_the_post_thumbnail($attachment->ID, array(49,49));
+					}
+					else
+					{
+						$img = '<img src="' . plugins_url( 'img/sony-folder.jpg' , __FILE__ ) . '" width="49px" height="49px">';
+					}
 	    		$thetitle = $attachment->post_title;
 					$getlength = strlen($thetitle);
 					$thelength = 20;
 					if ($getlength > $thelength){
-							$thedots = "...";
-						}
-						else
-						{
-							$thedots = "";
+						$thedots = "...";
 					}
-	    		$p9_str .= '<li>'.$img.'<a href="'.$attachment->guid.'" title="'.$attachment->post_title.'">'.substr($thetitle, 0, $thelength).'</a>'. $thedots .'</li>';
+					else
+					{
+						$thedots = "";
+					}
+	    		$p9_str .= '<li>'.$img.'<a href="'.$attachment->guid.'" title="'.$attachment->post_title.'">'.substr($thetitle, 0, $thelength).''. $thedots .'</a></li>';
 	    	}
 	   	}
 	   	else 
 	   	{	$args = array(
 	   	    	'title_li' => '',
 	   				'echo' => 1,
-	   				'depth' => 0,
+	   				'depth'=> $depth,
 	   				'sort_order'=>$sort_order,
 	   				'post_type'    => 'page',
 	   				'post_status'  => 'publish',

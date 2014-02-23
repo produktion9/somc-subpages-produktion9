@@ -53,6 +53,14 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		    	{
 		    		foreach($attachments as $attachment)
 		    	    {
+		    	    	$img = get_the_post_thumbnail($attachment->ID);
+								if ( ! empty( $img ) ){
+									$img = get_the_post_thumbnail($attachment->ID, array(35,35));
+								}
+								else
+								{
+									$img = '<img src="' . plugins_url( 'img/sony-folder.jpg' , __FILE__ ) . '" width="35px" height="35px">';
+								}
 		    	    	$thetitle = $attachment->post_title;
 								$getlength = strlen($thetitle);
 								$thelength = 20;
@@ -64,7 +72,7 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 										$thedots = "";
 								}
 			    	    ?>
-			    	    	<li><?php echo get_the_post_thumbnail($attachment->ID);?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?></li>	
+			    	    	<li><?php echo $img;?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?></li>	
 			    	    <?php 	
 		    	    }
 		    	 }

@@ -1,9 +1,48 @@
+/*Shortcode*/
 #sort-list{
+	font-family: "Helvetica",Arial,Tahoma,Verdana,sans-serif;
 	margin:0;
 	list-style-type: none;
+	font-size: 14px;
+}
+#sort-list a{
+	text-decoration: none;
+	color:#29ACE5;
+}
+#sort-list a:hover{
+	text-decoration: underline;
 }
 #sort-list li{
 	display: block;
-	padding:10px 0;
+	padding:14px 0;
+	line-height: 49px;
 	border-bottom: 1px solid #DADADA;
+}
+#sort-list li img{
+	float: left;
+	padding-right: 14px;
+}
+/*Widget*/
+#sort-list-widget{
+	font-family: "Helvetica",Arial,Tahoma,Verdana,sans-serif;
+	margin:0;
+	list-style-type: none;
+	/*font-size: 14px;*/
+}
+#sort-list-widget a{
+	text-decoration: none;
+	color:#29ACE5;
+}
+#sort-list-widget a:hover{
+	text-decoration: underline;
+}
+#sort-list-widget li{
+	display: block;
+	padding:7px 0;
+	line-height: 35px;
+	border-bottom: 1px solid #DADADA;
+}
+#sort-list-widget li img{
+	float: left;
+	padding-right: 7px;
 }

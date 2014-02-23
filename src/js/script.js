@@ -29,5 +29,4 @@ window.onload = function() {
     desc = !desc;
     return false;
   }
-}
-        
+}     
