@@ -46,7 +46,8 @@ class somc_subpages_produktion9_widget extends WP_Widget {
     	);
     	
     	$attachments = get_children( $args ); ?>
-				<ul class="page_list">
+    		<input type="button" id="sort-button-widget" value="Sort List (click again to reverse)"/>
+				<ul id="sort-list-widget">
 				<?php 
 		    	if($attachments)
 		    	{
