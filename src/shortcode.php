@@ -1,4 +1,5 @@
 <?php 
+
 function somc_subpages_produktion9_shortcode($atts)
 {
 	global $post;
@@ -21,7 +22,6 @@ function somc_subpages_produktion9_shortcode($atts)
 	$p9_str = '';
 	$p9_str .= '<div class="container">';
 	$p9_str .= '<h3 class="widget_title">'.$title.'</h3>';
-	//$p9_str .= '<input type="button" id="sort-button" value="Sort List (click again to reverse)"/>';
 	$page_id= $post->ID;
 	
 	$args = array(
@@ -70,10 +70,10 @@ function somc_subpages_produktion9_shortcode($atts)
 										'post_status' => 'publish',
 										'post_type' => 'page'
 							);
-		    			$childrens = get_pages($args_children);
+		    			$childrens = get_children($args_children);
     					
 		    			if ($childrens) {
-		    				$p9_str .= '<ul class="child">';
+		    				$p9_str .= '<ul class="child-'.$attachment->ID.'">';
 									foreach($childrens as $children)
 							    	{
 							    		$img = get_the_post_thumbnail($children->ID);
