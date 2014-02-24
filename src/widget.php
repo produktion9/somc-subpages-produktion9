@@ -33,6 +33,8 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 	 	{
 	 		$sort_by_values='';
 	 	}
+
+	 	$depth=empty($instance['depth']) ? '1' : apply_filters('widget_depth', $instance['depth']);
 	
     if (!empty($title))
       echo $before_title . $title . $after_title;
@@ -45,8 +47,8 @@ class somc_subpages_produktion9_widget extends WP_Widget {
     			'post_type' => 'page'
     	);
     	
-    	$attachments = get_children( $args ); ?>
-    		<input type="button" id="sort-button-widget" value="Sort List (click again to reverse)"/>
+    	$attachments = get_pages( $args ); ?>
+    		<!--<input type="button" id="sort-button-widget" value="Sort List (click again to reverse)"/>-->
 				<ul id="sort-list-widget">
 				<?php 
 		    	if($attachments)
@@ -72,7 +74,7 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 										$thedots = "";
 								}
 			    	    ?>
-			    	    	<li><?php echo $img;?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?></li>	
+			    	    	<li class="expandable"><?php echo $img;?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?></li>	
 			    	    <?php 	
 		    	    }
 		    	 }
@@ -81,7 +83,7 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		    	   $args = array(
 					   		'title_li' => '',
 		    			  'echo' => 1,
-		    			  'depth' => 0,
+		    			  'depth' => $depth,
 		    			  'sort_order'=>$sort_order,
 		    			  'post_type'    => 'page',
 		    			  'post_status'  => 'publish',
@@ -96,11 +98,12 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 			
 	// Widget Backend 
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'title' => '','sort_order' => '', 'sort_by'=>'' ) );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '','sort_order' => '', 'sort_by'=>'','depth'=>'') );
 		
 		$title = $instance['title'];
 		$sort_order=$instance['sort_order'];
 		$sort_by=$instance['sort_by'];
+		$depth=$instance['depth'];
 		?>
 		
 		<!-- Title -->
@@ -164,7 +167,22 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		  <?php } ?>      
 		</select>
 		</p>
-
+		<!-- Depth Level Field -->		
+		<p>
+			<label for="<?php echo $this->get_field_id('depth'); ?>"><?php _e('Depth Level', 'subpage'); ?></label>
+			<select name="<?php echo $this->get_field_name('depth'); ?>" id="<?php echo $this->get_field_id('depth'); ?>" class="widefat">	
+			<?php
+				$depth_options = array('1'=>__('1st Level Depth','subpage'),
+									   '2'=>__('2nd Level Depth','subpage'),
+									   '3'=>__('3rd Level Depth','subpage'),
+									   '4'=>__('4th Level Depth','subpage'),
+									   '0'=>__('Unlimited Depth','subpage')
+						);
+					foreach($depth_options as $depth_number=>$depth_label) { ?>
+			                <option <?php selected( $instance['depth'], $depth_number ); ?> value="<?php echo esc_attr($depth_number); ?>"><?php echo __($depth_label,'subpage'); ?></option>
+			                <?php } ?>      
+			</select>
+		</p>
 		<?php 
 	}
 		
@@ -174,6 +192,7 @@ class somc_subpages_produktion9_widget extends WP_Widget {
     $instance['title'] = $new_instance['title'];
     $instance['sort_order'] = $new_instance['sort_order'];
     $instance['sort_by'] = $new_instance['sort_by'];
+    $instance['depth']= $new_instance['depth'];
     return $instance;
 	}
 }// Class somc_subpages_produktion9_widget ends here
