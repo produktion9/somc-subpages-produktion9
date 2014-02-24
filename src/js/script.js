@@ -1,45 +1,32 @@
-// function sortUnorderedList(ul, sortDescending) {
-//   if(typeof ul == "string")
-//     ul = document.getElementById(ul);
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
+function hide($id){
+  jQuery(".child-"+String($id)).fadeOut(200);
+}
+function show($id){
+  jQuery(".child-"+String($id)).fadeIn(200);
+}
+var hidden = [];
+jQuery( document ).ready(function() {
+  jQuery(".collapse-button").click(function() {
+    var tid = jQuery(this).attr('id');
 
-//   var lis = ul.getElementsByTagName("LI");
-//   var vals = [];
-
-//   for(var i = 0, l = lis.length; i < l; i++)
-//     vals.push(lis[i].innerHTML);
-
-//   vals.sort();
-
-//   if(sortDescending)
-//     vals.reverse();
-
-//   for(var i = 0, l = lis.length; i < l; i++)
-//     lis[i].innerHTML = vals[i];
-// }
-
-// window.onload = function() {
-//   var desc = false;
-//   document.getElementById("sort-button").onclick = function() {
-//     sortUnorderedList("sort-list", desc);
-//     desc = !desc;
-//     return false;
-//   }
-//   document.getElementById("sort-button-widget").onclick = function() {
-//     sortUnorderedList("sort-list-widget", desc);
-//     desc = !desc;
-//     return false;
-//   }
-// }   
-
-$('li.expandable').click(function() {
-    $(this).children('ul').toggle();
-    return false;
-});  
-
-$("#child_22").fadeOut(100);
-
-collapseid.onclick - event (e)
- 
-  
-function hide_(childid)
- $(# + 'childid).fadeIn(100);
+    if (hidden.indexOf(tid) > -1) {
+        show(tid);
+        hidden.remove(tid);
+        jQuery("#"+tid).html("Hide");
+    } else {
+        hide(tid);
+        hidden.push(tid);
+        jQuery("#"+tid).html("Show");
+    }
+  })
+});
