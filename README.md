@@ -26,3 +26,8 @@ Options:
 2. Upload `somc-subpages-produktion9` folder to `/wp-content/plugins/`
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Add the widget to a sidebar and configure the options as desired or use the shortcode
+
+== Bugs ==
+- Only shows one level of children
+- First parent page must have an id lower than first child
+- Sorting on top level - (Temporarily removed)

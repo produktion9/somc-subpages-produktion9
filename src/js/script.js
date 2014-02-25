@@ -29,11 +29,11 @@ jQuery( document ).ready(function() {
     if (hidden.indexOf(tid) > -1) {
         show(tid);
         hidden.remove(tid);
-        jQuery("#"+tid).html('<img class="icon" src="'+templateUrl+'/hide-icon-grey.png"/>');
+        jQuery("#"+tid).html('<img class="icon" src="'+templateUrl+'/hide-icon-grey.png" title="Collapse list"/>');
     } else {
         hide(tid);
         hidden.push(tid);
-        jQuery("#"+tid).html('<img class="icon" src="'+templateUrl+'/show-icon-grey.png"/>');
+        jQuery("#"+tid).html('<img class="icon" src="'+templateUrl+'/show-icon-grey.png" title="Show list"/>');
     }
   })
 });
@@ -52,11 +52,83 @@ jQuery( document ).ready(function() {
     if (hidden.indexOf(tid) > -1) {
         show_p(tid);
         hidden.remove(tid);
-        jQuery("#"+tid).html('<img class="icon" src="'+templateUrl+'/hide-icon-grey.png"/>');
+        jQuery("#"+tid).html('<img class="icon_p" src="'+templateUrl+'/hide-icon-grey.png" title="Collapse list"/>');
     } else {
         hide_p(tid);
         hidden.push(tid);
-        jQuery("#"+tid).html('<img class="icon" src="'+templateUrl+'/show-icon-grey.png"/>');
+        jQuery("#"+tid).html('<img class="icon_p" src="'+templateUrl+'/show-icon-grey.png" title="Show list"/>');
     }
   })
 });
+
+//Sorting
+jQuery(document).ready(function() {
+  //when the document is ready
+  jQuery('.ascending_p').click(function() {
+  var pid = jQuery(this).attr('id');
+  //alert(pid);
+  //when the acending button is clicked run the following function
+  SORTER.sort('.parent-p'+String(pid));
+  jQuery("#"+pid).html('<img class="icon" src="'+templateUrl+'/desc-icon-grey.png"/>');
+  //sor tthe list
+  });
+  //close
+
+  jQuery('.descending_p').click(function() {
+  var pid = jQuery(this).attr('id');
+  //when the decending button is clicked run the following function
+  SORTER.sort('.parent-p'+String(pid), 'desc');
+  jQuery("#"+pid).html('<img class="icon" src="'+templateUrl+'/asc-icon-grey.png"/>');
+  //sor thte sortable list in a descending way
+  });
+  //close
+
+  jQuery('.ascending').click(function() {
+  var sid = jQuery(this).attr('id');
+  //alert (sid);
+  //when the acending button is clicked run the following function
+  SORTER.sort('.child-c'+String(sid));
+  jQuery("#"+sid).html('<img class="icon" src="'+templateUrl+'/desc-icon-grey.png"/>');
+  jQuery('.ascending').addClass('isHidden');
+  jQuery('.descending').removeClass('isHidden');
+  //sor tthe list
+  });
+  //close
+
+  jQuery('.descending').click(function() {
+  var sid = jQuery(this).attr('id');
+  //when the decending button is clicked run the following function
+  SORTER.sort('.child-c'+String(sid), 'desc');
+  jQuery("#"+sid).html('<img class="icon" src="'+templateUrl+'/asc-icon-grey.png"/>');
+  jQuery('.descending').addClass('isHidden');
+  jQuery('.ascending').removeClass('isHidden');
+  //sor thte sortable list in a descending way
+  });
+  //close
+
+
+}); var SORTER = {};
+//start the varable sorter
+
+SORTER.sort = function(which, dir) {
+//run sorter and run the function wthat will sort in the right direction
+
+SORTER.dir = (dir == "desc") ? -1 : 1;
+//the sorter with run the direction which is descending, meaing -1 to the ration of 1
+
+  jQuery(which).each(function() {
+  //each item run this function
+    var sorted = jQuery(this).find("> li").sort(function(a, b) {
+    //sort each item from a to b
+    return jQuery(a).text().toLowerCase() > jQuery(b).text().toLowerCase() ? SORTER.dir : -SORTER.dir;
+    //return and sort the text to alphbetical order from B to A
+  });
+  //close
+  jQuery(this).append(sorted);
+  //the appented to the sorted list
+});
+  //close
+
+};
+//close
+
