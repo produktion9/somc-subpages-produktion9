@@ -15,7 +15,7 @@ function somc_subpages_produktion9_shortcode($atts)
     //Set depth
     $depth          = empty($depth) ? '1' : $depth;
     //Set sort order
-    $sort_order     = empty($sort_order) ? 'ASC' : $sort_order;
+    $sort_order     = empty($sort_order) ? 'DESC' : $sort_order;
     //Set sort by
     $sort_by_values = empty($sort_by_values) ? 'page_title ' : $sort_by_values;
     //Parent page id
@@ -98,7 +98,7 @@ function somc_subpages_produktion9_shortcode($atts)
             $sorting       = null;
             
             if (count($childrens) > 1)
-                $sorting = '<span class="ascending" id="' . $attachment->ID . '"><img class="icon" src="' . plugins_url('img/asc-icon-grey.png', __FILE__) . '" title="Sort ascending"></span><span class="descending isHidden" id="' . $attachment->ID . '"><img class="icon" src="' . plugins_url('img/desc-icon-grey.png', __FILE__) . '" title="Sort descending"></span>';
+                $sorting = '<span class="ascending" id="' . $attachment->ID . '"><img class="icon" src="' . plugins_url('img/asc-icon-grey-t.png', __FILE__) . '" title="Sort ascending"></span><span class="descending" id="' . $attachment->ID . '"><img class="icon" src="' . plugins_url('img/desc-icon-grey-t.png', __FILE__) . '" title="Sort descending"></span>';
             else
                 $sorting = "";
             if (count($childrens) > 0)
@@ -137,6 +137,7 @@ function somc_subpages_produktion9_shortcode($atts)
                 }
                 $p9_str .= '</ul>';
             }
+            $p9_str .= '</li>';
         }
     } else {
         $args  = array(
@@ -151,7 +152,7 @@ function somc_subpages_produktion9_shortcode($atts)
         
         $p9_str .= $pages;
     }
-    $p9_str .= '</li>';
+    
     $p9_str .= '</ul>';
     $p9_str .= '</div>'; //End HTML string
     //Print HTML

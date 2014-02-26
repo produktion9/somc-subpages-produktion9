@@ -21,77 +21,160 @@ class somc_subpages_produktion9_widget extends WP_Widget {
   	extract($args,EXTR_SKIP);
 	
   	echo $before_widget;
+  	//Set title
     $title = empty($instance['title']) ? 'Pages' : apply_filters('widget_title', $instance['title']);
-   
-	 	$sort_order=empty($instance['sort_order']) ? 'ASC' : apply_filters('widget_sort', $instance['sort_order']);
-	 	
-	 	if(count($instance['sort_by']) > 0)
-	 	{
-	 		$sort_by_values=implode(',',$instance['sort_by']);
-	 	}
-	 	else
-	 	{
-	 		$sort_by_values='';
-	 	}
-
-	 	$depth=empty($instance['depth']) ? '1' : apply_filters('widget_depth', $instance['depth']);
-	
+	//Set sort order
+ 	//$sort_order=empty($instance['sort_order']) ? 'DESC' : apply_filters('widget_sort', $instance['sort_order']);
+ 	//Set sort by
+ 	// if(count($instance['sort_by']) > 0)
+ 	// {
+ 	// 	$sort_by_values=implode(',',$instance['sort_by']);
+ 	// }
+ 	// else
+ 	// {
+ 	// 	$sort_by_values='';
+ 	// }
+ 	//Set depth
+ 	// $depth=empty($instance['depth']) ? '1' : apply_filters('widget_depth', $instance['depth']);
+	//Print title
     if (!empty($title))
       echo $before_title . $title . $after_title;
 	
     $page_id = $post->ID;
     	$args = array(
-    			'order' => $sort_order,
+    			'order' => 'DESC',
     			'post_parent' => $page_id,
+    			'child_of' => $page_id,
+    			'sort_column' => 'post_title',
     			'post_status' => 'publish',
     			'post_type' => 'page'
     	);
     	
-    	$attachments = get_pages( $args ); ?>
-    		<!--<input type="button" id="sort-button-widget" value="Sort List (click again to reverse)"/>-->
-				<ul id="sort-list-widget">
-				<?php 
-		    	if($attachments)
-		    	{
-		    		foreach($attachments as $attachment)
-		    	    {
-		    	    	$img = get_the_post_thumbnail($attachment->ID);
-								if ( ! empty( $img ) ){
-									$img = get_the_post_thumbnail($attachment->ID, array(35,35));
-								}
-								else
-								{
-									$img = '<img src="' . plugins_url( 'img/sony-folder.jpg' , __FILE__ ) . '" width="35px" height="35px">';
-								}
-		    	    	$thetitle = $attachment->post_title;
-								$getlength = strlen($thetitle);
-								$thelength = 20;
-								if ($getlength > $thelength){
-										$thedots = "...";
-									}
-									else
-									{
-										$thedots = "";
-								}
-			    	    ?>
-			    	    	<li class="expandable"><?php echo $img;?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?></li>	
-			    	    <?php 	
-		    	    }
-		    	 }
-		    	 else 
-		    	 {	
-		    	   $args = array(
-					   		'title_li' => '',
-		    			  'echo' => 1,
-		    			  'depth' => $depth,
-		    			  'sort_order'=>$sort_order,
-		    			  'post_type'    => 'page',
-		    			  'post_status'  => 'publish',
-		    				);
-		    			$pages=wp_list_pages($args);	
-		    			print_r($pages);		
-		    	}?>
-		    </ul>
+	$attachments = get_pages( $args );
+	//Check if page has subpages and set collapsebutton
+	if (count($attachments) > 0)
+    $collapse_p = '<span class="collapse-button-widget-p" id="pw' . $page_id . '"><img class="icon_wp" src="' . plugins_url('img/hide-icon-grey.png', __FILE__) . '" title="Collapse list"></span>'; //. $sorting_p
+	else
+    $collapse_p = "";
+    echo $collapse_p
+    //Print ul
+    ?>
+		<ul id="sort-list-widget" class="parent-widget-pw<?php echo $page_id ?>">
+		<?php 
+		$real_parent = null;
+    	if($attachments)
+    	{
+    		foreach($attachments as $attachment)
+    	    {
+    	    	//Hack to check if first page is parent page
+            if ($real_parent === null)
+                $real_parent = $attachment->post_parent;
+            if ($attachment->post_parent != $real_parent)
+        	continue;
+    	    	//Show thumbnail if set
+            $img = get_the_post_thumbnail($attachment->ID);
+            if (!empty($img)) {
+                $img = get_the_post_thumbnail($attachment->ID, array(
+                    35,
+                    35
+                ));
+            } else {
+                //Show default image if no thumbnail
+                $img = '<img src="' . plugins_url('img/sony-folder.jpg', __FILE__) . '" width="35px" height="35px">';
+            }
+            //Truncate title
+            $thetitle  = $attachment->post_title;
+            $getlength = strlen($thetitle);
+            $thelength = 20;
+            if ($getlength > $thelength) {
+                $thedots = "...";
+            } else {
+                $thedots = "";
+            }
+            
+            //Array Children
+            $args_children = array(
+                'order' => 'DESC',
+                'post_parent' => $attachment->ID,
+                'child_of' => $attachment->ID,
+                'depth' => $attachment->depth,
+                'sort_column' => $attachment->sort_by_values,
+                'post_status' => 'publish',
+                'post_type' => 'page'
+            );
+            $childrens     = get_children($args_children);
+            $collapse      = null;
+            $sorting       = null;
+            if (count($childrens) > 1)
+        		$sorting = '<span class="ascending_widget" id="w' . $attachment->ID . '"><img class="icon_w" src="' . plugins_url('img/asc-icon-grey-t.png', __FILE__) . '" title="Sort ascending"></span><span class="descending_widget" id="w' . $attachment->ID . '"><img class="icon_w" src="' . plugins_url('img/desc-icon-grey-t.png', __FILE__) . '" title="Sort descending"></span>';
+            else
+                $sorting = "";
+            if (count($childrens) > 0)
+                $collapse = '<span class="collapse-button-widget" id="cw' . $attachment->ID . '"><img class="icon_w" src="' . plugins_url('img/hide-icon-grey.png', __FILE__) . '" title="Collapse list"></span>' . $sorting;
+            else
+                $collapse = "";
+            //Print li
+    	    ?>
+    	    	<li><?php echo $img;?><a href="<?php echo $attachment->guid;?>"><?php echo substr($thetitle, 0, $thelength);?></a><?php echo $thedots; ?><?php echo $collapse; ?>
+    	    <?php
+    	    	//Check if li has children
+	    	    if($childrens)
+			    	{
+			    		//Print children
+			    		?>
+			    		<ul class="child-widget-cw<?php echo $attachment->ID ?>">
+			    		<?php
+				    		foreach($childrens as $children)
+				    	    {
+				    	    	//Show thumbnail if set
+				            $img = get_the_post_thumbnail($children->ID);
+				            if (!empty($img)) {
+				                $img = get_the_post_thumbnail($children->ID, array(
+				                    35,
+				                    35
+				                ));
+				            } else {
+				                //Show default image if no thumbnail
+				                $img = '<img src="' . plugins_url('img/sony-folder.jpg', __FILE__) . '" width="35px" height="35px">';
+				            }
+				            //Truncate title
+				            $thetitle  = $children->post_title;
+				            $getlength = strlen($thetitle);
+				            $thelength = 20;
+				            if ($getlength > $thelength) {
+				                $thedots = "...";
+				            } else {
+				                $thedots = "";
+				            }
+					    	    ?>
+					    	    	<li><?php echo $img;?><a href="<?php echo $children->guid;?>"><?php echo substr($thetitle, 0, $thelength);?><?php echo $thedots; ?></a></li>
+					    	  <?php
+				    	    }
+				    	    ?>
+				    	</ul>
+					<?php
+			    	}
+	    	    ?>
+	    	  </li>
+	    	  <?php
+    	    }
+    	 }
+    	 else 
+    	 {	
+    	 	//If page has no subpages
+    	 	echo "<li>No subpages</li>";
+    	  //  $args = array(
+			   	// 	'title_li' => '',
+    			//   'echo' => 1,
+    			//   'depth' => $depth,
+    			//   'sort_order'=>'DESC',
+    			//   'post_type'    => 'page',
+    			//   'post_status'  => 'publish',
+    			// 	);
+    			// $pages=wp_list_pages($args);	
+    			// print_r($pages);		
+    	}?>
+    	</ul>
   	<?php
 		echo $after_widget;
 	}
@@ -101,9 +184,9 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		$instance = wp_parse_args( (array) $instance, array( 'title' => '','sort_order' => '', 'sort_by'=>'','depth'=>'') );
 		
 		$title = $instance['title'];
-		$sort_order=$instance['sort_order'];
-		$sort_by=$instance['sort_by'];
-		$depth=$instance['depth'];
+		// $sort_order=$instance['sort_order'];
+		// $sort_by=$instance['sort_by'];
+		// $depth=$instance['depth'];
 		?>
 		
 		<!-- Title -->
@@ -116,7 +199,7 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 				
 		<!-- Sort Order Field Starts-->
 		
-		<label for="help_text"><?php _e('Options for Displaying the Subpages','subpage')?></label> 
+		<!-- <label for="help_text"><?php _e('Options for Displaying the Subpages','subpage')?></label> 
 		<p>
 	  	<label for="<?php echo $this->get_field_id('sort_order'); ?>"><?php _e('Sorting Order', 'subpage'); ?></label>
 			<select name="<?php echo $this->get_field_name('sort_order'); ?>" id="<?php echo $this->get_field_id('sort_order'); ?>" class="widefat">	
@@ -130,11 +213,11 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 					<?php } 
 				?>      
 			</select>
-		</p>
+		</p> -->
 
 		<!-- Sorting Criteria Field -->
 		
-		<label for="help_text1"><?php _e('Options for Displaying the Parent Pages when their is no subpages to be displayed','subpage');?></label>
+		<!-- <label for="help_text1"><?php _e('Options for Displaying the Parent Pages when their is no subpages to be displayed','subpage');?></label>
 		<p>
 		<label for="<?php echo $this->get_field_id('sort_by'); ?>"><?php _e('Sorting Criteria', 'subpage'); ?></label>
 		<select multiple="multiple" name="<?php echo $this->get_field_name('sort_by'); ?>[]" id="<?php echo $this->get_field_id('sort_by'); ?>" class="widefat">
@@ -166,9 +249,9 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 		  <option <?php echo $selected?> value="<?php echo esc_attr($key); ?>"><?php echo __($value,'subpage'); ?></option>
 		  <?php } ?>      
 		</select>
-		</p>
+		</p> -->
 		<!-- Depth Level Field -->		
-		<p>
+		<!-- <p>
 			<label for="<?php echo $this->get_field_id('depth'); ?>"><?php _e('Depth Level', 'subpage'); ?></label>
 			<select name="<?php echo $this->get_field_name('depth'); ?>" id="<?php echo $this->get_field_id('depth'); ?>" class="widefat">	
 			<?php
@@ -182,17 +265,17 @@ class somc_subpages_produktion9_widget extends WP_Widget {
 			                <option <?php selected( $instance['depth'], $depth_number ); ?> value="<?php echo esc_attr($depth_number); ?>"><?php echo __($depth_label,'subpage'); ?></option>
 			                <?php } ?>      
 			</select>
-		</p>
+		</p> -->
 		<?php 
 	}
 		
 	// Updating widget replacing old instances with new
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-    $instance['title'] = $new_instance['title'];
-    $instance['sort_order'] = $new_instance['sort_order'];
-    $instance['sort_by'] = $new_instance['sort_by'];
-    $instance['depth']= $new_instance['depth'];
+	    $instance['title'] = $new_instance['title'];
+	    // $instance['sort_order'] = $new_instance['sort_order'];
+	    // $instance['sort_by'] = $new_instance['sort_by'];
+	    // $instance['depth']= $new_instance['depth'];
     return $instance;
 	}
 }// Class somc_subpages_produktion9_widget ends here

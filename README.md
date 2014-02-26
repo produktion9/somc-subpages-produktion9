@@ -27,7 +27,28 @@ Options:
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Add the widget to a sidebar and configure the options as desired or use the shortcode
 
+== Description ==
+
+This plugin creates a "Sub Pages" Widget and also a Shortcode to use in pages.
+
+It displays a list of subpages and children for the parent page.
+
+The list shows the pages thumbnail (if set) and the title of the page. (Truncated to 20 characters if needed.)
+
+Each level of pages/children is also collapsable and sortable by title.
+
+Its possible to set the title of the list in the widget and also in the shortcode.
+E.g: 
+[sub_page title='Pages']
+
+
+== Tested on ==
+Wordpress theme 2014
+-Firefox 27.0.1
+-Safari 7.0.1
+-Google Chrome 33.0.1750.117
+
 == Bugs ==
 - Only shows one level of children
 - First parent page must have an id lower than first child
-- Sorting on top level - (Temporarily removed)
+- Sorting on top level -> (Temporarily removed)
