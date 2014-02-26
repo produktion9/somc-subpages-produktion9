@@ -39,7 +39,7 @@ Each level of pages/children is also collapsable and sortable by title.
 
 Its possible to set the title of the list in the widget and also in the shortcode.
 E.g: 
-[sub_page title='Pages']
+[somc_subpages_produktion9 title='Pages']
 
 
 == Tested on ==
